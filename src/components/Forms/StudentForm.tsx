@@ -96,7 +96,7 @@ const StudentForm = () => {
                   <SelectValue placeholder="Select Teacher" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="name"> Kichu ekta</SelectItem>
+                  <SelectItem value="Teacher1">Teacher1</SelectItem>
                 </SelectContent>
               </Select>
 
