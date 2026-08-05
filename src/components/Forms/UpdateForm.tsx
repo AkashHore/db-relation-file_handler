@@ -1,14 +1,12 @@
 "use client";
 
 import { studentFormSchema, StudentFormType } from "@/lib/zodSchema";
-import { createStudent } from "@/server/createStudent";
-import { Teacher } from "@generated/prisma/client";
+import { Student, Teacher } from "@generated/prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderIcon, UserPlus2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import { useFilePicker } from "use-file-picker";
 import { FileSizeValidator } from "use-file-picker/validators";
 import { Avatar, AvatarImage } from "../shadcnui/avatar";
@@ -24,11 +22,12 @@ import {
   SelectValue,
 } from "../shadcnui/select";
 
-type StudentFormProps = {
+type UpdateFormProps = {
+  sData: Student;
   teachers: Teacher[];
 };
 
-const StudentForm = ({ teachers }: StudentFormProps) => {
+const UpdateForm = ({ sData, teachers }: UpdateFormProps) => {
   const [isFile, setIsFile] = useState(false);
 
   const { push } = useRouter();
@@ -41,8 +40,8 @@ const StudentForm = ({ teachers }: StudentFormProps) => {
   } = useForm({
     resolver: zodResolver(studentFormSchema),
     defaultValues: {
-      name: "",
-      teacherId: "",
+      name: sData.name,
+      teacherId: sData.teacherId,
     },
     mode: "all",
   });
@@ -58,23 +57,23 @@ const StudentForm = ({ teachers }: StudentFormProps) => {
     onClear: () => setIsFile(false),
   });
 
-  const createStudentFormHandler = async (csfData: StudentFormType) => {
+  const updateStudentFormHandler = async (usfData: StudentFormType) => {
     await new Promise((r) => setTimeout(r, 1000));
 
-    const { isSuccess, messege } = await createStudent(csfData, plainFiles[0]);
+    // const { isSuccess, messege } = await createStudent(csfData, plainFiles[0]);
 
-    if (isSuccess) {
-      reset();
-      toast.success(messege);
-      push("/");
-    } else {
-      toast.error(messege);
-    }
+    // if (isSuccess) {
+    //   reset();
+    //   toast.success(messege);
+    //   push("/");
+    // } else {
+    //   toast.error(messege);
+    // }
   };
 
   return (
     <form
-      onSubmit={handleSubmit(createStudentFormHandler)}
+      onSubmit={handleSubmit(updateStudentFormHandler)}
       className="grid gap-4"
       noValidate>
       <div className="grid place-items-center">
@@ -83,7 +82,7 @@ const StudentForm = ({ teachers }: StudentFormProps) => {
             type="button"
             onClick={openFilePicker}>
             <Avatar className={"size-64"}>
-              <AvatarImage src="https://placehold.co/256/png" />
+              <AvatarImage src={sData.imageUrl} />
             </Avatar>
           </button>
         )}
@@ -179,4 +178,4 @@ const StudentForm = ({ teachers }: StudentFormProps) => {
   );
 };
 
-export default StudentForm;
+export default UpdateForm;

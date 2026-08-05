@@ -1,15 +1,20 @@
 "use client";
 
-import { LoaderIcon, TrashIcon } from "lucide-react";
+import { LoaderIcon, Trash2Icon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "./shadcnui/button";
 
+// type DeleteButtonProps = {
+//   userId: string;
+// };
+
 const DeleteButton = () => {
   const [loading, setLoading] = useState(false);
+  const {} = useRouter();
 
   const deleteHandler = async () => {
     setLoading(true);
-
     await new Promise((r) => setTimeout(r, 1000));
 
     // const { isSuccess, messege } = await deleteUser(userId);
@@ -24,21 +29,21 @@ const DeleteButton = () => {
 
     setLoading(false);
   };
+
   return (
     <Button
       type="button"
       variant={"destructive"}
       size={"lg"}
-      className={"rounded-xl"}
+      className=""
       disabled={loading}
       onClick={deleteHandler}>
       {loading ?
         <>
-          <LoaderIcon className="animate-spin" /> Deleting...
+          <LoaderIcon className="animate-spin" /> Deleting
         </>
       : <>
-          <TrashIcon />
-          Delete
+          <Trash2Icon /> Delete
         </>
       }
     </Button>

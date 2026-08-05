@@ -1,5 +1,5 @@
-import { PenLineIcon } from "lucide-react";
-import { Route } from "next";
+import { StudentGetPayload } from "@generated/prisma/models";
+import { PenBoxIcon } from "lucide-react";
 import Link from "next/link";
 import DeleteButton from "./DeleteButton";
 import { Avatar, AvatarImage } from "./shadcnui/avatar";
@@ -7,37 +7,38 @@ import { Badge } from "./shadcnui/badge";
 import { buttonVariants } from "./shadcnui/button";
 import { Card, CardContent, CardFooter } from "./shadcnui/card";
 
-const StudentCard = () => {
+type StudentCardProps = {
+  student: StudentGetPayload<{
+    include: {
+      teacher: true;
+    };
+  }>;
+};
+
+const StudentCard = ({ student }: StudentCardProps) => {
   return (
     <Card className="w-xs">
       <CardContent className="grid place-items-center gap-4">
         <Avatar className={"size-64"}>
-          <AvatarImage src="https://placehold.co/256/png" />
+          <AvatarImage src={student.imageUrl} />
         </Avatar>
-
-        <div className="text-3xl font-semibold">Student1</div>
+        <div className="text-3xl font-semibold">{student.name}</div>
         <div className="flex items-center gap-2">
-          <span className="text-lg">Teacher Name</span>
+          <span className="text-lg">{student.teacher.name}</span>
           <Badge
             variant="default"
             className="h-6 text-lg">
-            Badge
+            {student.teacher.subject}
           </Badge>
         </div>
       </CardContent>
 
       <CardFooter className="grid grid-cols-2 gap-4">
         <DeleteButton />
-
         <Link
-          href={`/abcd` as Route}
-          className={buttonVariants({
-            variant: "secondary",
-            size: "lg",
-            className: "rounded-xl",
-          })}>
-          <PenLineIcon />
-          Edit
+          href={`/${student.id}`}
+          className={buttonVariants({ variant: "secondary", size: "lg" })}>
+          <PenBoxIcon /> Edit
         </Link>
       </CardFooter>
     </Card>
